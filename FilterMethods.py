@@ -118,4 +118,20 @@ print(quasi_constant_features)
 X_train.drop(labels=quasi_constant_features, axis=1, inplace=True)
 X_test.drop(labels=quasi_constant_features, axis=1, inplace=True)
 
+# %% [markdown]
+# ## Duplicated features
+
+# %%
+train_features_T = X_train.T
+#
+print(train_features_T)
+# print the number of duplicated features
+print(train_features_T.duplicated())
+# select the duplicated columns
+duplicated_columns = train_features_T[train_features_T.duplicated()].index.values
+#
+#
+X_train.drop(labels=duplicated_columns, axis=1, inplace=True)
+X_test.drop(labels=duplicated_columns, axis=1, inplace=True)
+
 # %%
