@@ -84,4 +84,38 @@ print(all_constant_columns)
 # %%
 X_train.drop(labels=all_constant_columns, axis=1, inplace=True)
 X_test.drop(labels=all_constant_columns, axis=1, inplace=True)
+
+
+# %% [markdown]
+# ## Quasi Constant Features
+
+# %%
+threshold = 0.98
+quasi_constant_features = []
+#
+for feature in X_train.columns:   
+    value_counts = X_train[feature].value_counts()
+    print('Value counts for', feature)
+    print(value_counts)
+    #Calculate the ratio
+    value_percentage = (value_counts / np.float64(len(X_train))).sort_values(ascending=False)
+    print('Value percentage:')
+    print(value_percentage)
+    predominant = value_percentage.values[0]
+    #
+    #
+    if(predominant >= threshold):
+        quasi_constant_features.append(feature)
+    
+    #
+print('Quasi constant features:')
+print(quasi_constant_features)
+
+# %% [markdown]
+# ### Drop the Quasi constant features for X_train and X_test
+
+# %%
+X_train.drop(labels=quasi_constant_features, axis=1, inplace=True)
+X_test.drop(labels=quasi_constant_features, axis=1, inplace=True)
+
 # %%
