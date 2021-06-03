@@ -134,4 +134,29 @@ duplicated_columns = train_features_T[train_features_T.duplicated()].index.value
 X_train.drop(labels=duplicated_columns, axis=1, inplace=True)
 X_test.drop(labels=duplicated_columns, axis=1, inplace=True)
 
+# %% [markdown]
+# ## Correlation Methods
+
+# %%
+correlated_features = set()
+correlation_matrix = X_train.corr()
+#
+plt.figure(figsize=(11, 11))
+sns.heatmap(correlation_matrix)
+
+# %%
+for i in range(len(correlation_matrix.columns)):
+    for j in range(i):
+        if abs(correlation_matrix.iloc[i, j]) > 0.8:
+            column = correlation_matrix.columns[i]
+            correlated_features.add(column)
+
+print(correlated_features)
+
+# %% [markdown]
+# ### Drop highly correlated columns
+
+# %%
+X_train.drop(labels=correlated_features, axis=1, inplace=True)
+X_test.drop(labels=correlated_features, axis=1, inplace=True)
 # %%
