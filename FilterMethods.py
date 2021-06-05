@@ -139,7 +139,9 @@ X_test.drop(labels=duplicated_columns, axis=1, inplace=True)
 
 # %%
 correlated_features = set()
-correlation_matrix = X_train.corr()
+correlation_matrix = X_train.corr(method="spearman")
+#correlation_matrix = X_train.corr(method="kendall")
+#correlation_matrix = X_train.corr()  # Default method is Pearson
 #
 plt.figure(figsize=(11, 11))
 sns.heatmap(correlation_matrix)
@@ -159,4 +161,44 @@ print(correlated_features)
 # %%
 X_train.drop(labels=correlated_features, axis=1, inplace=True)
 X_test.drop(labels=correlated_features, axis=1, inplace=True)
+
+# %% [markdown]
+# ## Statistical Measures
+
+# %%
+from sklearn.feature_selection import mutual_info_classif, chi2
+from sklearn.feature_selection import SelectKBest, SelectPercentile
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.metrics import roc_auc_score, mean_squared_error
+
+# %% [markdown]
+# ### Mutual Information
+
+# %%
+# Select the number of feature that to be retained
+select_k = 10
+
+# Get the numerical features
+numeric_X_train = X_train[X_train.select_dtypes([np.number]).columns]
+ 
+# Create the SelectKBest with nutual infor stategy
+selection = SelectKBest(score_func=mutual_info_classif, k=select_k).fit(numeric_X_train, y_train)
+
+# Display the retained features
+print(len(numeric_X_train.columns))
+print(len(selection.get_support()))
+print(len(X_train.columns))
+features = numeric_X_train.columns[selection.get_support()]
+print(features)
+
+# %% [markdown]
+# ### Chi-squared score
+
+# %%
+select_k = 10
+# Create the SelectKBest with Chi score
+# selection = SelectKBest(score_func=chi2, k=select_k).fit(X_train, y_train)
+# features = X_train.columns[selection.get_support()]
+print(select_k)
+
 # %%
