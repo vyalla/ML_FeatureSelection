@@ -48,4 +48,23 @@ print(X_test_sfs)
 print(X_test_sfs[0, :])
 print(X_test_sfs[0])
 
+# %% [markdown]
+# ## Backward Feature Selection
+
+# %%
+sbs = SequentialFeatureSelector(RandomForestClassifier(), k_features=10, forward=False
+        , floating=False, scoring="accuracy", cv=2)
+sbs = sbs.fit(X_train, y_train)
+
+# %%
+selected_features = X_train.columns[list(sbs.k_feature_idx_)]
+print(selected_features)
+print(sbs.k_score_)
+
+# %%
+X_train_sbs = sbs.transform(X_train)
+X_test_sbs = sbs.transform(X_test)
+
+# %%
+print(X_test_sbs)
 # %%
